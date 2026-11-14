@@ -1,0 +1,102 @@
+LEEME - ENTREGA DEL CODIGO DE LAS NUEVE LIBRERIAS DE XILIUX
+Preparada por Juan Carlos Isaza <contacto@xiliux.com>
+
+QUE ES ESTO
+
+  El fuente COMPLETO de las nueve micro-librerias Apache-2.0 de Xiliux, tal
+  como esta en el commit que nombra cada archivo. Nada retenido, nada
+  ofuscado, sin "edicion comercial" aparte. Incluye las pruebas.
+
+  Desde agosto de 2026 este codigo no se aloja en GitHub ni se publica en un
+  registro de paquetes. No es abandono: a lo largo de 2026 los registros y las
+  plataformas de codigo sufrieron ataques encadenados de cadena de suministro,
+  y alojar ahi herramientas de criptografia y de custodia de evidencia dejo de
+  ser una decision neutra.
+
+SUMAS SHA-256
+
+  dcb4020ef5639d4c0c888e502467a5a8eabe99feac111c1769ac77a4436151b0
+    position-sizing-0.1.0-2d232c3.tar.gz  (14522 bytes, commit 2d232c3, 9 archivos)
+
+  b314abb09054679efdcc91a39974d781a74da4ea6968d9b2ef036f2132fb2f45
+    ccxt-resilience-0.1.1-0586c53.tar.gz  (12329 bytes, commit 0586c53, 9 archivos)
+
+  fb06753a8ae9732f789106d58ca040cc17258a7b299afbdf6e008cfe50703005
+    honest-eval-0.1.1-8d83493.tar.gz  (12774 bytes, commit 8d83493, 9 archivos)
+
+  04974783070ccc06cf1c09d07f954bd229022718ab1b533faa586d5d40800d5a
+    hysteresis-state-0.1.1-c0a4c3c.tar.gz  (10416 bytes, commit c0a4c3c, 9 archivos)
+
+  40805c32f1845c9838766f586b30a39e2a363dae1c0156129a1101d1a41703fa
+    fanout-broadcast-0.1.1-e8547f6.tar.gz  (11676 bytes, commit e8547f6, 9 archivos)
+
+  83834d494988f729beea158556207ef24bedc3779f4288253292f112818265c4
+    dotkey-i18n-0.1.1-e4814fe.tar.gz  (10648 bytes, commit e4814fe, 11 archivos)
+
+  8637453a4cc5e55cd5a2694af83eed8a01caff51c00d0172c6821da931169919
+    tumbaga-0.3.0-af6fc4a.tar.gz  (16921 bytes, commit af6fc4a, 13 archivos)
+
+  f08ddd8b88242214a1bdda745a567748d7cd8faf7ed1d78690c7153c815625f9
+    chibcha-0.1.0-5a06cf9.tar.gz  (17585 bytes, commit 5a06cf9, 10 archivos)
+
+  01b564d8e8ef44f801b78ab17d02f01a27e8b4fbc5c53d048948a32bdf230565
+    mirilla-0.1.0-edc26dc.tar.gz  (14337 bytes, commit edc26dc, 9 archivos)
+
+  ab01cbc1247a1b840f24ac92c9f44f8358b81c23ed0d3282e08e486609ecb834
+    verificar-firma
+
+  1c3a363551b349d6d5871619cada4bdbe55b429d401d4a0ed3865394058a1b0f
+    CLAVE-PUBLICA.txt
+
+COMO VERIFICAR LO QUE RECIBE
+
+  VERIFIQUE PRIMERO EL MANIFIESTO, Y DESPUES LOS ARCHIVOS CONTRA EL. Ese orden
+  es el punto entero: una firma sobre un tarball prueba que esos bytes salieron
+  de esta clave, pero NO que sean el artefacto que usted pidio. Lo que ata cada
+  nombre a su contenido es SHA256SUMS, asi que es ese el archivo que hay que
+  firmar.
+
+  chmod +x verificar-firma
+  ./verificar-firma verificar "$(cat CLAVE-PUBLICA.txt)" \
+      SHA256SUMS SHA256SUMS.firma     # 1. el manifiesto es autentico
+  sha256sum -c SHA256SUMS             # 2. cada archivo coincide con el
+
+  El paso 1 imprime FIRMA VALIDA y sale con 0. Una entrega manipulada imprime
+  FIRMA INVALIDA - NO INSTALES ESTE ARCHIVO y sale con 1. La firma es hibrida
+  -Ed25519 y ML-DSA-87- y valida solo si las dos validan, asi que quien guarde
+  hoy estos archivos y tenga un computador cuantico manana sigue sin poder
+  falsificar una entrega pasada.
+
+  Cada tarball lleva ademas su propio .firma, comodo para comprobar un archivo
+  suelto - pero por si solo no le dice que ese archivo sea el que usted nombro.
+  Use el manifiesto.
+
+  El verificador es un binario estatico de Linux x86-64: sin dependencias, sin
+  Python, sin Rust y sin acceso a red.
+
+  UN SHA-256 PUBLICADO EN EL MISMO SERVIDOR QUE SIRVE EL ARCHIVO NO PROTEGE DE
+  UN SERVIDOR COMPROMETIDO: quien lo tome cambia el archivo y el hash. Protege
+  del transporte y del error de copia. De lo otro protege la firma del
+  manifiesto, cuya clave privada nunca ha estado en el servidor.
+
+  LO QUE ESTO NO CUBRE, dicho sin adornos: quien controle el servidor todavia
+  puede servirle una entrega ANTERIOR, legitimamente firmada, en vez de la
+  actual. Una firma separada no impide por si sola una vuelta atras. Si eso le
+  importa, pida las sumas por correo y compare.
+
+CONTRASTE LA CLAVE PUBLICA POR UN SEGUNDO CANAL
+
+  Una clave que viaja solo dentro del paquete que autentica no prueba nada.
+  La misma huella esta publicada en https://xiliux.com/quipu/codigo
+
+DONDE ESTAN LOS ARCHIVOS
+
+  https://xiliux.com/librerias/codigo          (la pagina, con cada suma)
+  https://xiliux.com/en/libraries/code         (en ingles)
+  https://xiliux.com/librerias/entrega/<nombre>
+
+  Sin registro, sin NDA, sin coste, sin restriccion sobre lo que publique de
+  lo que encuentre, y sin caducidad. Si prefiere recibirlo por correo o en otro
+  formato, diga la direccion o el formato y sale el mismo dia.
+
+  contacto@xiliux.com

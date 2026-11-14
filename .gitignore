@@ -1,0 +1,31 @@
+# --- Secretos / entorno (NUNCA versionar) ---
+.env
+*.env
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# --- NiceGUI: almacenamiento de sesión (contiene datos de usuarios) ---
+.nicegui/
+
+# --- Datos con PII: leads y contenido generado en runtime ---
+leads.json
+# correos y prefijos de clave de los suscriptores
+subscriptions.json
+# quipu-oprf.db y cualquier otra base local
+*.db
+
+# --- Transcripciones de sesión: 64 MB y conversaciones enteras ---
+conversaciones/
+
+# --- Respaldos del despliegue (se generan en el VPS antes de cada scp) ---
+main.py.bak-*
+# cualquier respaldo con marca (main.py.bak.<ts>, *.bak-<fecha>, *.json.bak-*)
+*.bak*
+
+# --- SO ---
+.DS_Store

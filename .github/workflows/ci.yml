@@ -1,0 +1,56 @@
+# CI de portafolio (xiliux.com) — boot + curl.
+#
+# EJECUCIÓN BAJO EL PROTOCOLO SOLO-LOCAL: GitHub Actions está APAGADO y es
+# permanente, así que este workflow NO corre en GitHub. Es la FUENTE DE VERDAD de
+# los pasos, que se ejecutan en local con:
+#
+#     python3 /mnt/data/conocimiento/cupo/verde_local.py portafolio
+#
+# (verde_local lee los `run:` de aquí y los corre con `bash -eo pipefail`, sin
+# copiarlos, así no envejecen) — o directo con `bash ci/boot_curl.sh`.
+#
+# portafolio no tiene banco de pruebas (es NiceGUI/Python, sin pytest); su
+# verificación real es cruzar la frontera del programa: arrancar el binario y
+# hablarle por HTTP (directiva 28). La aserción que justifica todo esto es que la
+# portada `/` sirva contenido y no la cáscara WebSocket de NiceGUI (las 27
+# palabras que motivaron el paso a SSR): si vuelve a client-render, sale ROJO.
+#
+# Las cuatro líneas Rust de la directiva 26 (opt-level, perfil de pruebas) NO
+# aplican: esto es Python. Sí aplican concurrency y timeout-minutes.
+
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# El commit publicado (main) tiene grupo propio por SHA para que una corrida
+# encolada no se cancele y ese commit se mida (directiva 26).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}${{ github.ref == 'refs/heads/main' && format('-{0}', github.sha) || '' }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  boot-curl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10          # el techo, no la duración esperada
+    steps:
+      # Los `uses:` NO se ejecutan bajo verde_local (solo corre los `run:`). Si
+      # algún día esto vuelve a un runner, ANCLAR a SHA de 40 dígitos (directiva
+      # 26): una etiqueta la reescribe quien controla la acción.
+      - uses: actions/checkout@<sha-40>        # PIN pendiente (D26)
+      - uses: actions/setup-python@<sha-40>    # PIN pendiente (D26)
+        with:
+          python-version: '3.12'
+      - name: Dependencias
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r requirements.txt   # nicegui, python-dotenv, markdown2
+      - name: Sintaxis
+        run: .venv/bin/python -c "import ast; ast.parse(open('main.py').read())"
+      - name: Boot + curl (directiva 28)
+        env:
+          APP_SECRET: ci-dummy-no-usado-en-prod   # el server lo exige para arrancar
+          PASSWORD: ci-dummy                       # SMTP; boot/curl no envían correo
+        run: bash ci/boot_curl.sh

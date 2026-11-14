@@ -1,0 +1,74 @@
+QUIPU - SOURCE DELIVERY MANIFEST
+Open Technology Fund - Security Lab request #22572
+Prepared 11 August 2026 by Juan Carlos Isaza <isazajuancarlos@gmail.com>
+
+This is a text manifest, not the delivery itself: your portal does not accept
+.zip uploads. It exists so that the checksums reach you through a channel I
+cannot alter after the fact - your own application record - separate from
+whatever channel carries the files.
+
+WHAT IS BEING DELIVERED
+
+  Complete source of Quipu release v0.11.1, at commit
+  614f46c9b5b3eba5bd6463c5db2401f5eb2c2d07 (branch "estable"), 265 files.
+  Licence AGPL-3.0. Nothing held back, nothing obfuscated, no separate
+  "commercial edition".
+
+  Included alongside it: a hybrid Ed25519 + ML-DSA-87 signature, the signing
+  public key, a static verifier binary (Linux x86-64, musl, no dependencies and
+  no network access), the technical specification, the threat model, and the
+  written internal pre-audit.
+
+SHA-256 CHECKSUMS
+
+  c8a0dbf4e73702590775ed18125465bd85091a19d3d02941579f354113a4d6f5
+    quipu-0.11.1-614f46c.tar.gz            (845266 bytes, the source)
+
+  641e0b336302d64767e10a62121f845dee1cc8ad7d6c98c48f4353eefd2a06ff
+ab01cbc1247a1b840f24ac92c9f44f8358b81c23ed0d3282e08e486609ecb834
+    quipu-0.11.1-614f46c.tar.gz.firma      (the signature over it)
+
+  ab01cbc1247a1b840f24ac92c9f44f8358b81c23ed0d3282e08e486609ecb834
+    verificar-firma                        (the static verifier)
+
+  1c3a363551b349d6d5871619cada4bdbe55b429d401d4a0ed3865394058a1b0f
+    CLAVE-PUBLICA.txt                      (the signing public key)
+
+  3e198c1bd6ea1f6c514402bc6b712e4dd6ee34d3c25a428d9fc7b42dc2608303
+    quipu-otf-22572.zip                    (all of the above in one envelope)
+
+SIGNING KEY FINGERPRINT
+
+  SHA-256 of CLAVE-PUBLICA.txt, with newlines stripped:
+
+    f64e 46b9 676f e72e 4f79 a9d1 3664 ebfe
+    94f9 6119 eb26 b037 8631 16dd f3d2 7d7d
+
+  The same fingerprint is published at https://xiliux.com/en/quipu/code
+  A key that travels only inside the package it authenticates proves nothing,
+  so check the key you receive against one of these two before using it.
+
+HOW TO VERIFY WHAT YOU RECEIVE
+
+  sha256sum -c SHA256SUMS
+  chmod +x verificar-firma
+  ./verificar-firma verificar "$(cat CLAVE-PUBLICA.txt)" \
+      quipu-0.11.1-614f46c.tar.gz quipu-0.11.1-614f46c.tar.gz.firma
+
+  A good delivery prints "FIRMA VALIDA" and exits 0. A tampered one prints
+  "FIRMA INVALIDA - NO INSTALES ESTE ARCHIVO" and exits 1. The signature is
+  hybrid and validates only if both Ed25519 and ML-DSA-87 validate.
+
+HOW TO GET THE FILES
+
+  Direct download, nothing to ask for:
+
+    https://xiliux.com/quipu/entrega/quipu-otf-22572.zip     (1.4 MB)
+    https://xiliux.com/quipu/entrega/MANIFIESTO.txt          (this file)
+
+  If you would rather receive it by email, or in another archive format, name
+  the address or the format and it goes the same day.
+  There is no NDA, no cost, no restriction on what you publish about what you
+  find, and no expiry.
+
+  contacto@xiliux.com  /  isazajuancarlos@gmail.com

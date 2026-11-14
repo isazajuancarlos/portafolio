@@ -1,0 +1,295 @@
+<title>CBOM de Quipu</title>
+<meta name="description" content="Radiografía criptográfica firmada de Quipu — inventario CycloneDX 1.6 de sus dos perfiles post-cuánticos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f6f8fb; --surface:#ffffff; --surface-2:#eef2f7; --border:#dbe3ee;
+  --text:#0b1424; --dim:#516079; --faint:#7c8aa3;
+  --accent:#0e7c96; --accent-2:#5457d6;
+  --grad:linear-gradient(90deg,#5457d6,#9333ea,#0e7c96);
+  --pq:#0f9d63; --pq-ink:#0a7a4c; --clasico:#c2740a; --sim:#0e7c96;
+  --shadow:0 1px 2px rgba(11,20,36,.06),0 8px 24px -12px rgba(11,20,36,.14);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#020617; --surface:#0d1626; --surface-2:#111c30; --border:#1e2c44;
+  --text:#e6edf7; --dim:#9fb0c8; --faint:#68788f;
+  --accent:#22d3ee; --accent-2:#818cf8;
+  --grad:linear-gradient(90deg,#818cf8,#c084fc,#22d3ee);
+  --pq:#34d399; --pq-ink:#6ee7b7; --clasico:#fbbf24; --sim:#22d3ee;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -16px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]{
+  --bg:#020617; --surface:#0d1626; --surface-2:#111c30; --border:#1e2c44;
+  --text:#e6edf7; --dim:#9fb0c8; --faint:#68788f;
+  --accent:#22d3ee; --accent-2:#818cf8;
+  --grad:linear-gradient(90deg,#818cf8,#c084fc,#22d3ee);
+  --pq:#34d399; --pq-ink:#6ee7b7; --clasico:#fbbf24; --sim:#22d3ee;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 12px 32px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.6;
+  -webkit-font-smoothing:antialiased;font-size:15px}
+.wrap{max-width:1040px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(16px,4vw,28px) 72px}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 14px}
+h1{font-size:clamp(1.9rem,5vw,2.9rem);line-height:1.08;margin:0 0 .5rem;font-weight:700;
+  letter-spacing:-.02em;text-wrap:balance}
+.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lede{font-size:clamp(1rem,2.2vw,1.18rem);color:var(--dim);max-width:60ch;margin:0 0 28px}
+.seal{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border:1px solid var(--border);
+  border-radius:999px;background:var(--surface);box-shadow:var(--shadow);font-size:.85rem;color:var(--dim)}
+.seal b{color:var(--pq-ink)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--pq);box-shadow:0 0 0 3px color-mix(in srgb,var(--pq) 22%,transparent)}
+.head-row{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
+
+.tabs{display:flex;gap:6px;margin:40px 0 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab{appearance:none;background:none;border:0;font-family:var(--sans);font-size:.95rem;font-weight:600;
+  color:var(--dim);padding:12px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab[aria-selected="true"]{color:var(--text);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+.tab .n{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-left:7px}
+
+.panel{padding-top:30px}
+.panel[hidden]{display:none}
+.meta{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
+.chip{font-family:var(--mono);font-size:.74rem;padding:5px 11px;border-radius:7px;border:1px solid var(--border);
+  background:var(--surface-2);color:var(--dim)}
+.chip b{color:var(--text);font-weight:600}
+
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;padding:20px 22px;
+  border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow);margin-bottom:14px}
+.verdict .big{font-size:2.4rem;font-weight:700;line-height:1;font-family:var(--mono);letter-spacing:-.03em}
+.verdict.ok .big{color:var(--pq-ink)}
+.verdict .claim{font-weight:600;margin:0 0 3px}
+.verdict .sub{color:var(--dim);font-size:.9rem;margin:0}
+.verdict .badge{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;
+  background:color-mix(in srgb,var(--pq) 16%,transparent);color:var(--pq-ink);font-size:1.5rem}
+
+.channels{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 26px}
+.chan{flex:1 1 200px;border:1px solid var(--border);border-radius:12px;padding:13px 15px;background:var(--surface)}
+.chan h4{margin:0 0 8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);font-family:var(--mono)}
+.pair{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pair .plus{color:var(--faint);font-weight:600}
+.mini{font-family:var(--mono);font-size:.78rem;padding:3px 8px;border-radius:6px;border:1px solid var(--border)}
+.mini.c{color:var(--clasico);border-color:color-mix(in srgb,var(--clasico) 40%,var(--border))}
+.mini.p{color:var(--pq-ink);border-color:color-mix(in srgb,var(--pq) 40%,var(--border))}
+
+.tablewrap{overflow-x:auto;border:1px solid var(--border);border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:660px;font-size:.9rem}
+thead th{text-align:left;font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);
+  font-weight:600;padding:14px 16px;border-bottom:1px solid var(--border);white-space:nowrap;font-family:var(--mono)}
+tbody td{padding:13px 16px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover{background:var(--surface-2)}
+.alg{font-weight:600;color:var(--text)}
+.prim{font-family:var(--mono);font-size:.78rem;color:var(--dim)}
+.oid{font-family:var(--mono);font-size:.78rem;color:var(--dim);font-variant-numeric:tabular-nums}
+.oid.none{color:var(--faint)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.pill.pq{color:var(--pq-ink);background:color-mix(in srgb,var(--pq) 14%,transparent)}
+.pill.cl{color:var(--clasico);background:color-mix(in srgb,var(--clasico) 15%,transparent)}
+.pill.sm{color:var(--sim);background:color-mix(in srgb,var(--sim) 14%,transparent)}
+.cat{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-left:7px}
+.rol{font-family:var(--mono);font-size:.72rem;color:var(--dim)}
+
+.sign{margin-top:22px;border:1px solid var(--border);border-radius:16px;background:var(--surface);
+  box-shadow:var(--shadow);padding:20px 22px}
+.sign h3{margin:0 0 4px;font-size:1rem;display:flex;align-items:center;gap:9px}
+.sign .algo{font-family:var(--mono);font-size:.8rem;color:var(--dim);margin:0 0 16px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:7px 18px;font-size:.84rem}
+.kv dt{color:var(--faint);font-family:var(--mono);font-size:.74rem;white-space:nowrap}
+.kv dd{margin:0;font-family:var(--mono);word-break:break-all;color:var(--text)}
+.note{margin:16px 0 0;padding:11px 14px;border-radius:10px;font-size:.82rem;color:var(--dim);
+  background:color-mix(in srgb,var(--clasico) 8%,transparent);border:1px solid color-mix(in srgb,var(--clasico) 26%,var(--border))}
+.note b{color:var(--clasico)}
+.note-ok{background:color-mix(in srgb,var(--pq) 8%,transparent);border-color:color-mix(in srgb,var(--pq) 26%,var(--border))}
+.note-ok b{color:var(--pq-ink)}
+
+.foot{margin-top:44px;padding-top:22px;border-top:1px solid var(--border);color:var(--dim);font-size:.85rem;max-width:70ch}
+.foot code{font-family:var(--mono);font-size:.82em;background:var(--surface-2);padding:.1em .4em;border-radius:5px;border:1px solid var(--border)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:18px 0 0;font-size:.78rem;color:var(--dim)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:9px;height:9px;border-radius:50%;font-style:normal}
+.toggle{position:fixed;top:14px;right:14px;background:var(--surface);border:1px solid var(--border);
+  color:var(--dim);border-radius:9px;padding:7px 10px;cursor:pointer;font-size:.9rem;box-shadow:var(--shadow);font-family:var(--sans)}
+.toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){.panel{animation:fade .3s ease}}
+@keyframes fade{from{opacity:.4}to{opacity:1}}
+@media (max-width:560px){.verdict{grid-template-columns:1fr}.verdict .badge{display:none}}
+</style>
+
+<button class="toggle" id="themeBtn" aria-label="Cambiar tema">◐</button>
+<div class="wrap">
+
+  <p class="eyebrow">Xiliux · Cryptography Bill of Materials · CycloneDX 1.6</p>
+  <div class="head-row">
+    <div>
+      <h1>La radiografía criptográfica <span class="grad">de Quipu</span></h1>
+    </div>
+    <div class="seal" title="Firma híbrida Ed25519 + ML-DSA-87, verificada contra el SHA-256 del documento">
+      <span class="dot"></span> Firma <b>verificada</b> · Ed25519 + ML-DSA-87
+    </div>
+  </div>
+  <p class="lede">Casi todos los inventarios criptográficos se hacen para <em>descubrir</em> qué hay que
+    migrar antes de la computación cuántica. El de Quipu demuestra lo contrario: aquí no queda nada por migrar.
+    Cada primitiva, con su OID, su nivel de seguridad y su estado frente a la amenaza cuántica — firmado y verificable.</p>
+
+  <div class="tabs" role="tablist" aria-label="Perfiles de Quipu">
+    <button class="tab" role="tab" id="tab-cnsa" aria-controls="p-cnsa" aria-selected="true">quipu-cnsa <span class="n">puro CNSA 2.0</span></button>
+    <button class="tab" role="tab" id="tab-hib" aria-controls="p-hib" aria-selected="false">quipu <span class="n">híbrido</span></button>
+  </div>
+
+  <!-- ============ PERFIL CNSA ============ -->
+  <section class="panel" id="p-cnsa" role="tabpanel" aria-labelledby="tab-cnsa">
+    <div class="meta">
+      <span class="chip">versión <b>0.1.1</b></span>
+      <span class="chip">licencia <b>AGPL-3.0-or-later</b></span>
+      <span class="chip">FIPS 140-3 <b>no validado</b></span>
+      <span class="chip">activos <b>7</b></span>
+    </div>
+
+    <div class="verdict ok">
+      <div class="badge">✓</div>
+      <div>
+        <p class="claim">0 primitivas cuántico-vulnerables entre las requeridas por CNSA 2.0</p>
+        <p class="sub">Perfil puro: los algoritmos que exige el mandato de la NSA, sin socio clásico. Más simple, pero si una familia PQ cayera no queda respaldo — por eso existe el perfil híbrido.</p>
+      </div>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Algoritmo</th><th>Primitiva</th><th>OID (NIST CSOR)</th><th>CNSA</th><th>Resistencia cuántica</th></tr></thead>
+        <tbody>
+          <tr><td class="alg">AES-256-GCM</td><td class="prim">AEAD · cifrado</td><td class="oid">2.16.840.1.101.3.4.1.46</td><td class="rol">requerido</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">SHA-384</td><td class="prim">hash</td><td class="oid">2.16.840.1.101.3.4.2.2</td><td class="rol">requerido</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 4</span></td></tr>
+          <tr><td class="alg">HKDF-SHA-384</td><td class="prim">derivación de clave</td><td class="oid none">—</td><td class="rol">requerido</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 4</span></td></tr>
+          <tr><td class="alg">Argon2id</td><td class="prim">KDF de contraseña</td><td class="oid none">—</td><td class="rol">fuera de alcance</td><td><span class="pill sm">simétrico</span></td></tr>
+          <tr><td class="alg">ML-DSA-87</td><td class="prim">firma · FIPS 204</td><td class="oid">2.16.840.1.101.3.4.3.19</td><td class="rol">requerido</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">ML-KEM-1024</td><td class="prim">establecimiento de clave · FIPS 203</td><td class="oid">2.16.840.1.101.3.4.4.3</td><td class="rol">requerido</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">ChaCha20-DRBG</td><td class="prim">generador aleatorio</td><td class="oid none">—</td><td class="rol">auxiliar</td><td><span class="pill sm">simétrico</span><span class="cat">cat 5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sign">
+      <h3><span class="dot"></span> Firma verificada</h3>
+      <p class="algo">quipu-hibrido-Ed25519+ML-DSA-87 · 4691 bytes · detached</p>
+      <dl class="kv">
+        <dt>SHA-256</dt><dd>abae11c1a03706f6335eb285e0506471ae4b5d65cab5e75eb32d56f24afa87ca</dd>
+        <dt>Clave</dt><dd>identidad-xiliux · huella 313a559ff4879b3c</dd>
+        <dt>Verificación</dt><dd>íntegro · firma válida · clave ajena rechazada</dd>
+      </dl>
+    </div>
+  </section>
+
+  <!-- ============ PERFIL HÍBRIDO ============ -->
+  <section class="panel" id="p-hib" role="tabpanel" aria-labelledby="tab-hib" hidden>
+    <div class="meta">
+      <span class="chip">versión <b>0.12.0</b></span>
+      <span class="chip">licencia <b>AGPL-3.0-or-later</b></span>
+      <span class="chip">FIPS 140-3 <b>no validado</b></span>
+      <span class="chip">activos <b>10</b></span>
+    </div>
+
+    <div class="verdict ok">
+      <div class="badge">✓</div>
+      <div>
+        <p class="claim">Ningún canal depende solo de criptografía clásica</p>
+        <p class="sub">Cifrado, establecimiento de clave y firma combinan una primitiva clásica con una post-cuántica. El sistema resiste aunque una de las dos familias caiga — lo clásico y lo cuántico se cubren mutuamente.</p>
+      </div>
+    </div>
+
+    <div class="channels">
+      <div class="chan"><h4>Establecimiento de clave</h4><div class="pair"><span class="mini c">X25519</span><span class="plus">+</span><span class="mini p">ML-KEM-1024</span></div></div>
+      <div class="chan"><h4>Firma</h4><div class="pair"><span class="mini c">Ed25519</span><span class="plus">+</span><span class="mini p">ML-DSA-87</span><span class="plus">+</span><span class="mini p">SLH-DSA</span></div></div>
+      <div class="chan"><h4>Cifrado</h4><div class="pair"><span class="mini p">XChaCha20-Poly1305</span></div></div>
+    </div>
+
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Algoritmo</th><th>Primitiva</th><th>Canal</th><th>OID</th><th>Rol / resistencia</th></tr></thead>
+        <tbody>
+          <tr><td class="alg">XChaCha20-Poly1305</td><td class="prim">AEAD</td><td class="rol">cifrado</td><td class="oid none">—</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">X25519</td><td class="prim">acuerdo de clave</td><td class="rol">kem</td><td class="oid">1.3.101.110</td><td><span class="pill cl">clásico</span><span class="cat">emparejado</span></td></tr>
+          <tr><td class="alg">ML-KEM-1024</td><td class="prim">KEM · FIPS 203</td><td class="rol">kem</td><td class="oid">2.16.840.1.101.3.4.4.3</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">Ed25519</td><td class="prim">firma</td><td class="rol">firma</td><td class="oid">1.3.101.112</td><td><span class="pill cl">clásico</span><span class="cat">emparejado</span></td></tr>
+          <tr><td class="alg">ML-DSA-87</td><td class="prim">firma · FIPS 204</td><td class="rol">firma</td><td class="oid">2.16.840.1.101.3.4.3.19</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">SLH-DSA-SHA2-256s</td><td class="prim">firma · FIPS 205</td><td class="rol">firma</td><td class="oid">2.16.840.1.101.3.4.3.22</td><td><span class="pill pq">post-cuántico</span><span class="cat">cat 5</span></td></tr>
+          <tr><td class="alg">HKDF-SHA-256</td><td class="prim">derivación de clave</td><td class="rol">kdf</td><td class="oid none">—</td><td><span class="pill sm">simétrico</span><span class="cat">cat 2</span></td></tr>
+          <tr><td class="alg">Argon2id</td><td class="prim">KDF de contraseña</td><td class="rol">kdf</td><td class="oid none">—</td><td><span class="pill sm">simétrico</span></td></tr>
+          <tr><td class="alg">SHA-256</td><td class="prim">hash</td><td class="rol">hash</td><td class="oid">2.16.840.1.101.3.4.2.1</td><td><span class="pill sm">simétrico</span><span class="cat">cat 2</span></td></tr>
+          <tr><td class="alg">ChaCha20-DRBG</td><td class="prim">generador aleatorio</td><td class="rol">drbg</td><td class="oid none">—</td><td><span class="pill sm">simétrico</span><span class="cat">cat 5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sign">
+      <h3><span class="dot"></span> Firma verificada</h3>
+      <p class="algo">quipu-hibrido-Ed25519+ML-DSA-87 · 4691 bytes · detached</p>
+      <dl class="kv">
+        <dt>SHA-256</dt><dd>64da6bafa2aae417294b7b43a0fc5cb7bf3f4dafe883092422fcf9ce88e15a42</dd>
+        <dt>Clave</dt><dd>identidad-xiliux · huella 313a559ff4879b3c</dd>
+        <dt>Verificación</dt><dd>íntegro · firma válida · clave ajena rechazada</dd>
+      </dl>
+    </div>
+  </section>
+
+  <p class="note note-ok"><b>Firma de identidad.</b> Los dos documentos están firmados con la clave de identidad
+    de Xiliux (huella <b>313a559f…</b>), custodiada cifrada con Argon2id. La firma es verificable de forma
+    independiente contra la clave pública publicada: comprueba la integridad del documento y que lo firmó esta clave.</p>
+
+  <div class="legend">
+    <span><i style="background:var(--pq)"></i> Post-cuántico — resistente por diseño</span>
+    <span><i style="background:var(--clasico)"></i> Clásico — emparejado con un socio PQ</span>
+    <span><i style="background:var(--sim)"></i> Simétrico — categoría NIST indicada</span>
+  </div>
+
+  <div class="foot">
+    Un <b>CBOM</b> (Cryptography Bill of Materials) es el inventario de los activos criptográficos de un software,
+    en el formato abierto <b>CycloneDX 1.6</b> de OWASP. Es la pieza central de la migración post-cuántica que
+    empujan NIST (FIPS 203/204/205), la NSA (CNSA 2.0) y la UE: no se puede migrar la criptografía que no se sabe
+    que se tiene. Los niveles «cat N» son las categorías de seguridad de NIST. Generado por <code>quipu-cbom</code>
+    a partir del descriptor de cada perfil y firmado con la propia firma híbrida de Quipu.
+  </div>
+</div>
+
+<script>
+(function(){
+  var tabs=[document.getElementById('tab-cnsa'),document.getElementById('tab-hib')];
+  var panels={'tab-cnsa':document.getElementById('p-cnsa'),'tab-hib':document.getElementById('p-hib')};
+  function select(id){
+    tabs.forEach(function(t){
+      var on=t.id===id; t.setAttribute('aria-selected',on?'true':'false');
+      panels[t.id].hidden=!on;
+    });
+  }
+  tabs.forEach(function(t){
+    t.addEventListener('click',function(){select(t.id);});
+    t.addEventListener('keydown',function(e){
+      var i=tabs.indexOf(t);
+      if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+        e.preventDefault();
+        var n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];
+        n.focus(); select(n.id);
+      }
+    });
+  });
+  // Tema: ciclo claro/oscuro respetando el del sistema como punto de partida
+  var btn=document.getElementById('themeBtn'), root=document.documentElement;
+  btn.addEventListener('click',function(){
+    var cur=root.getAttribute('data-theme');
+    if(!cur){ // sin marcar: ir al opuesto del sistema
+      var dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
+      root.setAttribute('data-theme',dark?'light':'dark');
+    } else {
+      root.setAttribute('data-theme',cur==='dark'?'light':'dark');
+    }
+  });
+})();
+</script>

@@ -1,0 +1,92 @@
+# BLOQUE 1: App en xiliux.com (canónico, SOLO no-www)
+  server {
+      listen 443 ssl;
+      server_name xiliux.com;
+
+      ssl_certificate /etc/letsencrypt/live/xiliux.com/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/xiliux.com/privkey.pem;
+      include /etc/letsencrypt/options-ssl-nginx.conf;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+      # --- Cabeceras de seguridad (#130) — seguras, aplícalas ya ---
+      add_header Strict-Transport-Security "max-age=31536000" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-Frame-Options "DENY" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+      add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+      # --- CSP: NO la actives a ciegas. Descoméntala, recarga, y abre la consola
+      #     del navegador (F12). Si NO ves errores "Content-Security-Policy" y
+      #     PayPal sigue cargando, déjala. Si algo se rompe, coméntala y me dices
+      #     qué error salió y la afino. (Lleva unsafe-inline/eval porque NiceGUI
+      #     los necesita; aun así cierra XSS externo.)
+      add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https://www.paypalobjects.com https://www.google-analytics.com https://*.google-analytics.com https://*.googletagmanager.com; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.paypal.com https://www.sandbox.paypal.com https://www.googletagmanager.com; frame-src https://www.paypal.com https://www.sandbox.paypal.com https://github.com; connect-src 'self' https://www.paypal.com https://api-m.paypal.com wss://xiliux.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self' https://www.paypal.com https://www.sandbox.paypal.com" always;
+
+      proxy_cookie_flags ~ secure;
+
+      location = /healthz {
+          access_log off;
+          default_type text/plain;
+          return 200 "ok\n";
+      }
+
+      # --- SDK entregado a pedido, con token por solicitud (2026-08-11) ---
+      # Estáticos firmados. NO hay autoindex: sin el token exacto no se puede
+      # descubrir qué hay ni quién más lo tiene. El token es la unidad de
+      # control y de revocación —borrar el directorio corta el acceso— y cada
+      # descarga queda en el log con su token, su hora y su IP.
+      location /sdk/ {
+          alias /var/www/xiliux-sdk/;
+          autoindex off;
+          access_log /var/log/nginx/sdk.log;
+          add_header X-Robots-Tag "noindex, nofollow" always;
+          # Los .firma y la clave pública son texto; que se vean en el navegador.
+          types { application/octet-stream whl tar gz; text/plain firma txt; }
+          default_type application/octet-stream;
+      }
+
+      # Verificador público de tunjo (WASM client-side) — copia propia servida
+      # por nginx, no por la app (2026-10-12). SIN `add_header` aquí: en nginx un
+      # add_header en el location REEMPLAZA los del server, y la CSP del vhost es
+      # justo la que deja correr el WASM (`script-src ... 'unsafe-eval'`, super-
+      # conjunto de 'wasm-unsafe-eval'); `.wasm` sale como application/wasm por
+      # mime.types. NO enlaza a la marca jurídica (decisión 0009: copia propia).
+      location /verificar/ {
+          alias /var/www/xiliux-verificar/;
+          try_files $uri $uri/ =404;
+      }
+
+      location / {
+          proxy_pass http://127.0.0.1:8080;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+
+          # Interactividad de NiceGUI (WebSocket)
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_read_timeout 86400;
+      }
+  }
+# BLOQUE 1b: www (HTTPS) -> no-www canónico
+  server {
+      listen 443 ssl;
+      server_name www.xiliux.com;                                                                                                                                                                                                             
+                        
+      ssl_certificate /etc/letsencrypt/live/xiliux.com/fullchain.pem;
+      ssl_certificate_key /etc/letsencrypt/live/xiliux.com/privkey.pem;
+      include /etc/letsencrypt/options-ssl-nginx.conf;
+      ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+      add_header Strict-Transport-Security "max-age=31536000" always;
+
+      return 301 https://xiliux.com$request_uri;
+  }
+# BLOQUE 2: todo el HTTP (www y no-www) -> https no-www, en un solo salto
+  server {
+      listen 80;
+      server_name xiliux.com www.xiliux.com;
+      return 301 https://xiliux.com$request_uri;
+  }

@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "title": "Proyecto Xiliux",
+    "category": "web app",
+    "description": "Sistema integrado de Xiliux: un solo binario en Rust que sirve su propia interfaz, funciona offline y guarda en SQLite.",
+    "tech": [
+      "Rust",
+      "axum",
+      "maud + htmx",
+      "SQLite",
+      "SQLx"
+    ],
+    "image": "https://i.imgur.com/jczVoCK.png",
+    "link": "https://proyecto.xiliux.com",
+    "repo": "#"
+  },
+  {
+    "id": 2,
+    "title": "Bachué — identidad, autorización y OIDC",
+    "category": "seguridad",
+    "description": "Motor único de autorización y servidor de identidad en Rust: contraseña con Argon2id, segundo factor TOTP con anti-replay, passkeys/WebAuthn (ES256), credencial passwordless OPAQUE, y un proveedor OpenID Connect propio — descubrimiento, JWKS con rotación de claves, PKCE y validación de aud/iss/exp, no solo de la firma. Cada decisión de diseño sale de romper un sistema real.",
+    "tech": [
+      "Rust",
+      "quipu (cripto)",
+      "OpenID Connect",
+      "WebAuthn / passkeys",
+      "OPAQUE",
+      "TOTP",
+      "Argon2id",
+      "ML-DSA-87"
+    ],
+    "image": "https://i.imgur.com/jczVoCK.png",
+    "link": "https://proyecto.xiliux.com",
+    "repo": "#"
+  },
+  {
+    "id": 3,
+    "title": "Pre-RIPS — valida tu RIPS antes de enviarlo",
+    "category": "salud",
+    "description": "Pre-vuelo de forma para el FEV-RIPS (Resolución 948 de 2026): sube tu RIPS en JSON o la plantilla Excel oficial y te dice qué rechazaría el MUV de MinSalud ANTES de enviarlo — estructura, campos no permitidos, campos requeridos que faltan y códigos fuera de las tablas cerradas de la norma. No se arroga ser MinSalud: caza la forma, que es la mayoría de los rechazos del cierre de mes. Rust, corre offline, no guarda nada.",
+    "tech": [
+      "Rust",
+      "axum",
+      "maud + htmx",
+      "calamine (Excel)",
+      "FEV-RIPS / Resolución 948"
+    ],
+    "image": "https://xiliux.com/assets/prerips.png",
+    "link": "https://rips.xiliux.com",
+    "repo": "#"
+  }
+]

@@ -1,0 +1,46 @@
+QUIPU — MANIFIESTO DE LA ENTREGA DE FUENTE
+==========================================
+
+VERSION 0.14.1
+COMMIT 8c71f131f45858882e32a16632bb51ec10f376d3
+RAMA estable
+FECHA 2026-09-06
+
+Este es un manifiesto de texto, no la entrega en sí. Existe para que las sumas
+SHA-256 lleguen por un canal —tu registro, tu correo, esta página— separado del
+que carga los archivos, y para que la huella de la clave de firma no viaje solo
+dentro del paquete que autentica.
+
+QUÉ SE ENTREGA
+
+  Fuente completa de Quipu v0.14.1, en el commit 8c71f13 de la rama estable.
+  233 archivos nuestros más el árbol de dependencias vendorizado (7 016
+  archivos), de modo que se construye sin red y sin confiar en ningún registro.
+  Licencia AGPL-3.0.
+
+  Junto a la fuente: una firma HÍBRIDA Ed25519 + ML-DSA-87 (válida solo si
+  validan las dos), la clave pública, un verificador estático (Linux x86-64,
+  musl, sin dependencias ni red), y este manifiesto.
+
+SUMAS SHA-256
+
+  0eb03a3bc50a0e93523a1dbd2d1ca9236518b570226d2de3f9dec4b7e2e50f9d  quipu-0.14.1-8c71f13.tar.gz
+  2b05d5a0151373b0bc0b3adbf3e62c1940509c2ae74615de6056410c1fcf7b98  quipu-0.14.1-8c71f13.tar.gz.firma
+  ab01cbc1247a1b840f24ac92c9f44f8358b81c23ed0d3282e08e486609ecb834  verificar-firma
+  1c3a363551b349d6d5871619cada4bdbe55b429d401d4a0ed3865394058a1b0f  CLAVE-PUBLICA.txt
+
+  d566d0ff7f7e0350094232b8878c5357d1b40d747ebbac9a7aec13cc265643f9
+    quipu-0.14.1-8c71f13.zip   (el sobre entero)
+
+CÓMO VERIFICAR
+
+  sha256sum -c SHA256SUMS
+  ./verificar-firma verificar "$(cat CLAVE-PUBLICA.txt)" \
+      quipu-0.14.1-8c71f13.tar.gz quipu-0.14.1-8c71f13.tar.gz.firma
+
+  Una entrega buena imprime FIRMA VALIDA y sale con 0; una manipulada imprime
+  *** FIRMA INVALIDA - NO INSTALES ESTE ARCHIVO *** y sale con 1.
+
+HUELLA DE LA CLAVE DE FIRMA
+
+  sha256(CLAVE-PUBLICA.txt) = 1c3a363551b349d6d5871619cada4bdbe55b429d401d4a0ed3865394058a1b0f
